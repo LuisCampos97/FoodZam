@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FoodZam</string>
+    <string name="clarifai_api_key">b5012a86f4b14085897e87414fb0186e</string>
 </resources>
