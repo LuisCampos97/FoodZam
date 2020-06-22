@@ -127,11 +127,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static byte[] bitmapToByteArray(Bitmap bm) {
-        byte[] data = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        data = baos.toByteArray();
 
-        return data;
+        return baos.toByteArray();
     }
 }
