@@ -1,9 +1,6 @@
 package pt.ipleiria.estg.foodzam;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
