@@ -1,4 +1,4 @@
-package pt.ipleiria.estg.foodzam;
+package pt.ipleiria.estg.foodzam.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -22,12 +22,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-/**
- * A simple {@link Fragment} subclass.
- * create an instance of this fragment.
- *
- */
-public class ProfileFragment extends Fragment {
+import pt.ipleiria.estg.foodzam.LoginActivity;
+import pt.ipleiria.estg.foodzam.R;
+
+public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     GoogleSignInClient mGoogleSignInClient;
     Button sign_out;
@@ -42,10 +40,11 @@ public class ProfileFragment extends Fragment {
 
         View fragment_view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        sign_out = fragment_view.findViewById(R.id.log_out);
+        sign_out = fragment_view.findViewById(R.id.sign_out);
+        sign_out.setOnClickListener(this);
+
         nameTV = fragment_view.findViewById(R.id.name);
         emailTV = fragment_view.findViewById(R.id.email);
-        idTV = fragment_view.findViewById(R.id.id);
         photoTV = fragment_view.findViewById(R.id.photo);
 
 
@@ -59,29 +58,18 @@ public class ProfileFragment extends Fragment {
         mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(requireActivity());
+
         if (acct != null) {
             String personName = acct.getDisplayName();
-            String personGivenName = acct.getGivenName();
-            String personFamilyName = acct.getFamilyName();
             String personEmail = acct.getEmail();
-            String personId = acct.getId();
             Uri personPhoto = acct.getPhotoUrl();
 
             nameTV.setText("Name: "+personName);
             emailTV.setText("Email: "+personEmail);
-            idTV.setText("ID: "+personId);
             Glide.with(this).load(personPhoto).into(photoTV);
         }
 
-        sign_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sign_out();
-            }
-        });
-
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        return fragment_view;
     }
 
     private void sign_out(){
@@ -94,5 +82,12 @@ public class ProfileFragment extends Fragment {
                         requireActivity().finish();
                     }
                 });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.sign_out) {
+            sign_out();
+        }
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileFragment">
+    tools:context=".fragments.ProfileFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -14,7 +14,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
 
         <ImageView
             android:id="@+id/photo"
@@ -41,28 +40,17 @@
             android:textColor="@color/colorPrimary"
             android:layout_gravity="center"/> />
 
-        <TextView
-            android:id="@+id/id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ID: ID HERE"
-            android:textSize="18sp"
-            android:textColor="@color/colorPrimary"
-            android:layout_gravity="center"/><![CDATA[
-
-        />
-    ]]>
     </LinearLayout>
 
     <Button
-        android:id="@+id/log_out"
+        android:id="@+id/sign_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:background="@color/colorPrimary"
+        android:layout_marginBottom="116dp"
+        android:background="@color/button_color"
         android:text="Sign out"
-        android:textColor="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

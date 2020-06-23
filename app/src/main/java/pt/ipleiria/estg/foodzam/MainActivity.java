@@ -9,6 +9,11 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import pt.ipleiria.estg.foodzam.fragments.FavoritesFragment;
+import pt.ipleiria.estg.foodzam.fragments.HomeFragment;
+import pt.ipleiria.estg.foodzam.fragments.ProfileFragment;
+import pt.ipleiria.estg.foodzam.fragments.RecipeFragment;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -29,8 +34,11 @@ public class MainActivity extends AppCompatActivity {
             Fragment selectedFragment = null;
 
             switch  (menuItem.getItemId()){
-                case R.id.homeFragment:
+                case R.id.predictFragment:
                     selectedFragment = new HomeFragment();
+                    break;
+                case R.id.recipesFragment:
+                    selectedFragment = new RecipeFragment();
                     break;
                 case R.id.profileFragment:
                     selectedFragment = new ProfileFragment();

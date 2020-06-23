@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="pt.ipleiria.estg.foodzam.HomeFragment"
+        android:name="pt.ipleiria.estg.foodzam.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="pt.ipleiria.estg.foodzam.ProfileFragment"
+        android:name="pt.ipleiria.estg.foodzam.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="pt.ipleiria.estg.foodzam.FavoritesFragment"
+        android:name="pt.ipleiria.estg.foodzam.fragments.FavoritesFragment"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" />
 </navigation>
