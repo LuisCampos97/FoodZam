@@ -64,8 +64,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             String personEmail = acct.getEmail();
             Uri personPhoto = acct.getPhotoUrl();
 
-            nameTV.setText("Name: "+personName);
-            emailTV.setText("Email: "+personEmail);
+            nameTV.setText(personName);
+            emailTV.setText(personEmail);
             Glide.with(this).load(personPhoto).into(photoTV);
         }
 

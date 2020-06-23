@@ -15,7 +15,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_menu"
         android:id="@+id/bottom_navbar"
-        android:background="@color/button_color"
+        android:background="@color/colorPrimary"
+        app:itemIconTint="@color/colorSecundary"
+        app:itemTextColor="@color/colorSecundary"
         />
 
     <androidx.fragment.app.FragmentContainerView
@@ -30,7 +32,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/my_nav" />
 
-    <ImageView
+    <!-- <ImageView
         android:id="@+id/wave_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -56,7 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/wave_image" />
+        app:layout_constraintTop_toTopOf="@+id/wave_image" /> -->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
