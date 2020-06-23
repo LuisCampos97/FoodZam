@@ -31,6 +31,13 @@ import clarifai2.dto.model.Model;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 import pt.ipleiria.estg.foodzam.R;
+import pt.ipleiria.estg.foodzam.SpoonacularAPI;
+import pt.ipleiria.estg.foodzam.model.Recipe;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -56,6 +63,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         btnGaleria.setOnClickListener(this);
         btnCamera.setOnClickListener(this);
+
+        //TODO: SPOONACULAR API
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.spoonacular.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        SpoonacularAPI spoonacularAPI = retrofit.create(SpoonacularAPI.class);
+
+        Call<List<Recipe>> call = spoonacularAPI.getRecipesByIngredient("apple", 1, getString(R.string.spoonacular_api_key));
+
+        /*call.enqueue(new Callback<List<Recipe>>() {
+            @Override
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                System.out.println(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+
+            }
+        }); */
 
         return fragment_view;
     }
