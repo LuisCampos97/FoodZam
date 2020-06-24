@@ -29,10 +29,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     GoogleSignInClient mGoogleSignInClient;
     Button sign_out;
-    TextView nameTV;
-    TextView emailTV;
-    TextView idTV;
-    ImageView photoTV;
+    TextView nameTextView;
+    TextView emailTextView;
+    ImageView photoImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,18 +42,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         sign_out = fragment_view.findViewById(R.id.sign_out);
         sign_out.setOnClickListener(this);
 
-        nameTV = fragment_view.findViewById(R.id.name);
-        emailTV = fragment_view.findViewById(R.id.email);
-        photoTV = fragment_view.findViewById(R.id.photo);
+        nameTextView = fragment_view.findViewById(R.id.name);
+        emailTextView = fragment_view.findViewById(R.id.email);
+        photoImageView = fragment_view.findViewById(R.id.photo);
 
-
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
-        // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(requireActivity());
@@ -64,9 +59,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             String personEmail = acct.getEmail();
             Uri personPhoto = acct.getPhotoUrl();
 
-            nameTV.setText(personName);
-            emailTV.setText(personEmail);
-            Glide.with(this).load(personPhoto).into(photoTV);
+            nameTextView.setText(personName);
+            emailTextView.setText(personEmail);
+            Glide.with(this).load(personPhoto).into(photoImageView);
         }
 
         return fragment_view;

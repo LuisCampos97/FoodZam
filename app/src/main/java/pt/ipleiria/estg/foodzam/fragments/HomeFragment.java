@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.foodzam.fragments;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,13 +16,13 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import clarifai2.api.ClarifaiBuilder;
@@ -51,8 +53,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_IMAGE_CAPTURE = 2;
 
     private ImageView imageView;
-    private Button btnGaleria, btnCamera;
+    private Button btnGallery, btnCamera, btnOpenDialog;
     RequestQueue requestQueue;
+
+    ArrayList<String> ingredients = null;
+    ArrayAdapter<String> adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,13 +68,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         StrictMode.setThreadPolicy(policy);
 
         imageView = fragment_view.findViewById(R.id.imageView);
-        btnGaleria = fragment_view.findViewById(R.id.galeriaButton);
+        btnGallery = fragment_view.findViewById(R.id.galeriaButton);
         btnCamera = fragment_view.findViewById(R.id.cameraButton);
+        btnOpenDialog = fragment_view.findViewById(R.id.openDialogButton);
 
-        btnGaleria.setOnClickListener(this);
+        btnGallery.setOnClickListener(this);
         btnCamera.setOnClickListener(this);
+        btnOpenDialog.setOnClickListener(this);
+        btnOpenDialog.setVisibility(View.INVISIBLE);
 
         requestQueue = Volley.newRequestQueue(requireActivity());
+
+        ingredients = new ArrayList<>();
 
         return fragment_view;
     }
@@ -78,42 +88,55 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        ingredients.clear();
+
         ClarifaiClient client = new ClarifaiBuilder(getString(R.string.clarifai_api_key)).buildSync();
         Model<Concept> generalModel = client.getDefaultModels().generalModel();
+        PredictRequest<Concept> request = null;
 
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Uri imageData = data.getData();
             imageView.setImageURI(imageData);
 
-            PredictRequest<Concept> request = generalModel.predict().withInputs(
+            request = generalModel.predict().withInputs(
                     ClarifaiInput.forImage(convertImageToByte(imageData))
             );
 
-            List<ClarifaiOutput<Concept>> results = request.executeSync().get();
-            List<Concept> resulstsData = results.get(0).data();
-
-            apiCall("rice");
-
-            for (int i = 0; i < resulstsData.size(); i++) {
-                float prob = (resulstsData.get(i).value()) * 100;
-                System.out.println(resulstsData.get(i).name() + " - " + prob + "%");
-            }
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
             Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(imageBitmap);
 
-            PredictRequest<Concept> request = generalModel.predict().withInputs(
+            request = generalModel.predict().withInputs(
                     ClarifaiInput.forImage(bitmapToByteArray(imageBitmap))
             );
-
-            List<ClarifaiOutput<Concept>> results = request.executeSync().get();
-            List<Concept> resulstsData = results.get(0).data();
-
-            for (int i = 0; i < resulstsData.size(); i++) {
-                float prob = (resulstsData.get(i).value()) * 100;
-                System.out.println(resulstsData.get(i).name() + " - " + prob + "%");
-            }
         }
+
+        btnOpenDialog.setVisibility(View.VISIBLE);
+
+        List<ClarifaiOutput<Concept>> results = request.executeSync().get();
+        List<Concept> resulstsData = results.get(0).data();
+
+        for (int i = 0; i < resulstsData.size(); i++) {
+            float prob = (resulstsData.get(i).value()) * 100;
+            ingredients.add(resulstsData.get(i).name());
+        }
+
+        openDialog();
+    }
+
+    public void openDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(requireActivity());
+        View row = getLayoutInflater().inflate(R.layout.dialog_item, null);
+        ListView listView = row.findViewById(R.id.listView);
+
+        adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, ingredients);
+
+        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        alertDialog.setView(row);
+        AlertDialog dialog = alertDialog.create();
+        dialog.show();
     }
 
     @Override
@@ -129,6 +152,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.cameraButton:
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                break;
+
+            case R.id.openDialogButton:
+                openDialog();
+                break;
         }
     }
 
