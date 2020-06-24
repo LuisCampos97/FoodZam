@@ -16,10 +16,12 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -118,7 +120,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         for (int i = 0; i < resulstsData.size(); i++) {
             float prob = (resulstsData.get(i).value()) * 100;
-            ingredients.add(resulstsData.get(i).name());
+            String ingredientName = resulstsData.get(i).name().substring(0, 1).toUpperCase() + resulstsData.get(i).name().substring(1);
+            ingredients.add(ingredientName);
         }
 
         openDialog();
@@ -126,16 +129,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public void openDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(requireActivity());
-        View row = getLayoutInflater().inflate(R.layout.dialog_item, null);
-        ListView listView = row.findViewById(R.id.listView);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_item, null);
+        ListView listView = dialogView.findViewById(R.id.listView);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
 
         adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, ingredients);
 
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            String ingredientName = ingredients.get(position);
+
+            //TODO: Chamada da API para procurar a receita
+            Toast.makeText(requireActivity().getBaseContext(), ingredientName, Toast.LENGTH_LONG).show();
+        });
+
         adapter.notifyDataSetChanged();
 
-        alertDialog.setView(row);
+        alertDialog.setView(dialogView);
         AlertDialog dialog = alertDialog.create();
+
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
         dialog.show();
     }
 
