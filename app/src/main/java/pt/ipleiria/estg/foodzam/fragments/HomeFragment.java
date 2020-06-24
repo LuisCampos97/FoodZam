@@ -18,6 +18,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -31,13 +42,6 @@ import clarifai2.dto.model.Model;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 import pt.ipleiria.estg.foodzam.R;
-import pt.ipleiria.estg.foodzam.SpoonacularAPI;
-import pt.ipleiria.estg.foodzam.model.Recipe;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -48,6 +52,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private ImageView imageView;
     private Button btnGaleria, btnCamera;
+    RequestQueue requestQueue;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,27 +69,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnGaleria.setOnClickListener(this);
         btnCamera.setOnClickListener(this);
 
-        //TODO: SPOONACULAR API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.spoonacular.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        SpoonacularAPI spoonacularAPI = retrofit.create(SpoonacularAPI.class);
-
-        Call<List<Recipe>> call = spoonacularAPI.getRecipesByIngredient("apple", 1, getString(R.string.spoonacular_api_key));
-
-        /*call.enqueue(new Callback<List<Recipe>>() {
-            @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                System.out.println(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
-
-            }
-        }); */
+        requestQueue = Volley.newRequestQueue(requireActivity());
 
         return fragment_view;
     }
@@ -106,6 +91,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             List<ClarifaiOutput<Concept>> results = request.executeSync().get();
             List<Concept> resulstsData = results.get(0).data();
+
+            apiCall("rice");
 
             for (int i = 0; i < resulstsData.size(); i++) {
                 float prob = (resulstsData.get(i).value()) * 100;
@@ -143,6 +130,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
         }
+    }
+
+    public void apiCall(String food) {
+        String url = "https://api.spoonacular.com/recipes/findByIngredients?ingredients="+food+"&number=2&apiKey="+getString(R.string.spoonacular_api_key);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    System.out.println("teste");
+                    try {
+                        JSONArray jsonArray = response.getJSONArray("");
+
+                        for(int i = 0;i <jsonArray.length(); i++) {
+                            JSONObject recipe = jsonArray.getJSONObject(i);
+
+                            System.out.println(recipe.getInt("id"));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+
+                error -> {
+
+                });
+
+        requestQueue.add(request);
     }
 
     public byte[] convertImageToByte(Uri uri) {
