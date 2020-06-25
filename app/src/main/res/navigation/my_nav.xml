@@ -9,15 +9,24 @@
         android:id="@+id/homeFragment"
         android:name="pt.ipleiria.estg.foodzam.fragments.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_recipesFragment"
+            app:destination="@id/recipesFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/profileFragment"
-        android:name="pt.ipleiria.estg.foodzam.fragments.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        android:id="@+id/recipesFragment"
+        android:name="pt.ipleiria.estg.foodzam.fragments.RecipeFragment"
+        android:label="recipe_profile"
+        tools:layout="@layout/fragment_recipe" />
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="pt.ipleiria.estg.foodzam.fragments.FavoritesFragment"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="pt.ipleiria.estg.foodzam.fragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>
