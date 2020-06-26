@@ -2,7 +2,9 @@ package pt.ipleiria.estg.foodzam.fragments;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -21,10 +23,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +47,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -51,42 +55,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private static final int GALLERY_REQUEST_CODE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
 
-    private ImageView imageView;
-    private Button btnGallery, btnCamera, btnOpenDialog;
+    private ImageView imageView, recipeImageView;
+    private Button chooseButton, btnOpenDialog;
 
     ArrayList<String> ingredients = null;
     ArrayAdapter<String> adapter;
 
-    Retrofit retrofit;
-    SpoonacularAPI spoonacularAPI;
-
-    View fragment_view;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        fragment_view = inflater.inflate(R.layout.fragment_home, container, false);
+        View fragment_view = inflater.inflate(R.layout.fragment_home, container, false);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         imageView = fragment_view.findViewById(R.id.imageView);
-        btnGallery = fragment_view.findViewById(R.id.galeriaButton);
-        btnCamera = fragment_view.findViewById(R.id.cameraButton);
+        recipeImageView = fragment_view.findViewById(R.id.recipeImageView);
+        chooseButton = fragment_view.findViewById(R.id.chooseButton);
         btnOpenDialog = fragment_view.findViewById(R.id.openDialogButton);
 
-        btnGallery.setOnClickListener(this);
-        btnCamera.setOnClickListener(this);
+        chooseButton.setOnClickListener(this);
         btnOpenDialog.setOnClickListener(this);
         btnOpenDialog.setVisibility(View.INVISIBLE);
 
         ingredients = new ArrayList<>();
-
-        retrofit = new Retrofit.Builder().baseUrl("https://api.spoonacular.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        spoonacularAPI = retrofit.create(SpoonacularAPI.class);
 
         return fragment_view;
     }
@@ -101,36 +93,51 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         Model<Concept> generalModel = client.getDefaultModels().generalModel();
         PredictRequest<Concept> request = null;
 
-        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            Uri imageData = data.getData();
-            imageView.setImageURI(imageData);
+        if(resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case 0:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                        imageView.setImageBitmap(imageBitmap);
 
-            request = generalModel.predict().withInputs(
-                    ClarifaiInput.forImage(convertImageToByte(imageData))
-            );
+                        if(imageBitmap != null) {
+                            request = generalModel.predict().withInputs(
+                                    ClarifaiInput.forImage(bitmapToByteArray(imageBitmap))
+                            );
+                        }
+                    }
+                    break;
 
-        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
-            Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(imageBitmap);
+                case 1:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Uri imageData = data.getData();
+                        imageView.setImageURI(imageData);
 
-            request = generalModel.predict().withInputs(
-                    ClarifaiInput.forImage(bitmapToByteArray(imageBitmap))
-            );
+                        if(imageData != null) {
+                            request = generalModel.predict().withInputs(
+                                    ClarifaiInput.forImage(convertImageToByte(imageData))
+                            );
+                        }
+                    }
+                    break;
+            }
         }
 
-        btnOpenDialog.setVisibility(View.VISIBLE);
+        if(request != null) {
+            btnOpenDialog.setVisibility(View.VISIBLE);
 
-        List<ClarifaiOutput<Concept>> results = request.executeSync().get();
-        List<Concept> resulstsData = results.get(0).data();
+            List<ClarifaiOutput<Concept>> results = request.executeSync().get();
+            List<Concept> resulstsData = results.get(0).data();
 
-        for (int i = 0; i < resulstsData.size(); i++) {
-            float prob = (resulstsData.get(i).value()) * 100;
-            String ingredientName = resulstsData.get(i).name().substring(0, 1).toUpperCase() + resulstsData.get(i).name().substring(1);
-            if(prob > 97)
-                ingredients.add(ingredientName);
+            for (int i = 0; i < resulstsData.size(); i++) {
+                float prob = (resulstsData.get(i).value()) * 100;
+                String ingredientName = resulstsData.get(i).name().substring(0, 1).toUpperCase() + resulstsData.get(i).name().substring(1);
+                if(prob > 97)
+                    ingredients.add(ingredientName);
+            }
+
+            openDialog();
         }
-
-        openDialog();
     }
 
     public void openDialog() {
@@ -153,8 +160,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            apiCall(ingredients.get(position));
             dialog.dismiss();
+            String ingredient = ingredients.get(position);
+            //TODO: Mover para o RecipeFragment e procurar lá por receitas do alimentos
         });
 
         dialog.show();
@@ -163,48 +171,33 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.galeriaButton:
-                Intent galleryIntent = new Intent();
-                galleryIntent.setType("image/*");
-                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(galleryIntent, "Pick an image"), GALLERY_REQUEST_CODE);
-                break;
+            case R.id.chooseButton:
+                final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
 
-            case R.id.cameraButton:
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                builder.setTitle("Choose an image");
+
+                builder.setItems(options, (dialog, item) -> {
+
+                    if (options[item].equals("Take Photo")) {
+                        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(takePicture, 0);
+
+                    } else if (options[item].equals("Choose from Gallery")) {
+                        Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(pickPhoto , 1);
+
+                    } else if (options[item].equals("Cancel")) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
                 break;
 
             case R.id.openDialogButton:
                 openDialog();
                 break;
         }
-    }
-
-    public void apiCall(String food) {
-        Call<List<Recipe>> listCall = spoonacularAPI.getRecipesByIngredients(food, "1", getString(R.string.spoonacular_api_key));
-
-        listCall.enqueue(new Callback<List<Recipe>>() {
-            @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                if (!response.isSuccessful()) {
-                    System.out.println("Code: " + response.code());
-                    return;
-                }
-
-                List<Recipe> recipes = response.body();
-
-                for (Recipe recipe : recipes) {
-                    System.out.println("ReceitaID: " + recipe.getId());
-                    System.out.println("ReceitaTitle: " + recipe.getTitle());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                System.out.println(t.getMessage());
-            }
-        });
     }
 
     public byte[] convertImageToByte(Uri uri) {
