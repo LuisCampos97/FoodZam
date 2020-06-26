@@ -4,15 +4,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".RecipeDetails">
 
-    <TextView
-        android:id="@+id/textView"
+    <ImageView
+        android:id="@+id/iconPeople"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RECIPE DETAILS"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toEndOf="@+id/textViewTime"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
+        app:srcCompat="@drawable/ic_people" />
+
+    <ImageView
+        android:id="@+id/imageViewRecipe"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/lasanha" />
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Lasanha"
+        android:textColor="@color/colorSecundary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewRecipe" />
+
+    <TextView
+        android:id="@+id/textViewTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="30 Minutes"
+        android:textColor="@color/colorSecundary"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/iconTime"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    <TextView
+        android:id="@+id/textViewPeople"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="4 Pessoas"
+        android:textColor="@color/colorSecundary"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewTime"
+        app:layout_constraintStart_toEndOf="@+id/iconPeople" />
+
+    <ImageView
+        android:id="@+id/iconTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
+        app:srcCompat="@drawable/ic_time" />
+
+    <Button
+        android:id="@+id/buttonViewRecipe"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="50dp"
+        android:background="@color/colorSecundary"
+        android:text="View Recipe"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
+
+    <TextView
+        android:id="@+id/textViewDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi commodo rhoncus metus, nec aliquam nisl volutpat vitae. Nullam id lacinia nulla. Aenean tortor diam, egestas vel fermentum vitae, ornare sit amet odio. Fusce vitae tincidunt eros. Nam at quam consequat, feugiat ligula et, efficitur purus. Sed a maximus arcu, vel ornare orci. Donec a congue metus.  In faucibus sapien a bibendum pulvinar. Nam lorem enim, aliquam luctus congue eget, porta sed dolor. Phasellus vulputate feugiat viverra. Proin eu lectus vitae turpis efficitur euismod molestie vel quam. Sed id neque nibh. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam sit amet mauris leo. Aliquam a placerat mauris, quis fringilla justo. Nulla lacus tortor, tincidunt et magna nec, elementum accumsan dolor. Duis sapien ligula, varius ac vulputate quis, accumsan sit amet sem."
+        android:textColor="@color/colorSecundary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTime" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
