@@ -16,5 +16,6 @@ public interface SpoonacularAPI {
                                                @Query("apiKey") String apiKey);
 
     @GET("recipes/{id}/information")
-    Call<List<Recipe>> getRecipeInformation(@Path("id") int recipedId);
+    Call<Recipe> getRecipeInformation(@Path("id") int recipedId,
+                                      @Query("apiKey") String apiKey);
 }

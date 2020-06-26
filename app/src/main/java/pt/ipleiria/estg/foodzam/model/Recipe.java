@@ -1,11 +1,11 @@
 package pt.ipleiria.estg.foodzam.model;
 
-import android.net.Uri;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Recipe {
 
     private int id;
@@ -15,9 +15,11 @@ public class Recipe {
     @SerializedName("extendedIngredients")
     private List<Ingredient> ingredients;
 
-    @SerializedName("instructions")
-    private String steps;
+    private int readyInMinutes;
+    private int servings;
+    private List<AnalyzedInstructions> analyzedInstructions;
 
+    // Getters Methods
     public int getId() {
         return id;
     }
@@ -34,8 +36,48 @@ public class Recipe {
         return ingredients;
     }
 
-    public String getSteps() {
-        return steps;
+    public int getReadyInMinutes() {
+        return readyInMinutes;
+    }
+
+    public int getServings() {
+        return servings;
+    }
+
+    public List<AnalyzedInstructions> getAnalyzedInstructions() {
+        return analyzedInstructions;
+    }
+
+    // Inner Classes
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Step {
+        private int number;
+        private String step;
+
+        public int getNumber() {
+            return number;
+        }
+        public String getStep() {
+            return step;
+        }
+
+        @Override
+        public String toString() {
+            return "Step{" +
+                    "number=" + number +
+                    ", step='" + step + '\'' +
+                    '}';
+        }
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class AnalyzedInstructions {
+
+        private List<Step> steps;
+
+        public List<Step> getSteps() {
+            return steps;
+        }
     }
 
     @Override
