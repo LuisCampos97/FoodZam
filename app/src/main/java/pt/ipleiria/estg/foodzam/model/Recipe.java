@@ -11,13 +11,10 @@ public class Recipe {
     private int id;
     private String title;
     private String image;
-
-    @SerializedName("extendedIngredients")
-    private List<Ingredient> ingredients;
-
     private int readyInMinutes;
     private int servings;
     private List<AnalyzedInstructions> analyzedInstructions;
+    private List<Ingredient> extendedIngredients;
 
     // Getters Methods
     public int getId() {
@@ -32,10 +29,6 @@ public class Recipe {
         return image;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
     public int getReadyInMinutes() {
         return readyInMinutes;
     }
@@ -48,36 +41,8 @@ public class Recipe {
         return analyzedInstructions;
     }
 
-    // Inner Classes
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Step {
-        private int number;
-        private String step;
-
-        public int getNumber() {
-            return number;
-        }
-        public String getStep() {
-            return step;
-        }
-
-        @Override
-        public String toString() {
-            return "Step{" +
-                    "number=" + number +
-                    ", step='" + step + '\'' +
-                    '}';
-        }
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class AnalyzedInstructions {
-
-        private List<Step> steps;
-
-        public List<Step> getSteps() {
-            return steps;
-        }
+    public List<Ingredient> getExtendedIngredients() {
+        return extendedIngredients;
     }
 
     @Override

@@ -46,9 +46,6 @@ public class RecipeDetails extends AppCompatActivity {
                 }
 
                 Recipe recipe = response.body();
-
-                System.out.println(recipe.getIngredients().get(0));
-
             }
 
             @Override
@@ -56,8 +53,6 @@ public class RecipeDetails extends AppCompatActivity {
                 System.out.println(t.getMessage());
             }
         });
-
-
     }
 
     @Override
