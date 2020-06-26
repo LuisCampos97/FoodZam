@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".RecipeDetails">
+    tools:context=".RecipeDetailsActivity">
 
     <ImageView
         android:id="@+id/iconPeople"
@@ -57,7 +57,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="4 Pessoas"
+        android:text="4 Servings"
         android:textColor="@color/colorSecundary"
         android:textSize="18sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/textViewTime"
@@ -78,7 +78,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="50dp"
         android:background="@color/colorSecundary"
@@ -87,8 +86,7 @@
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textViewDescription"
@@ -99,8 +97,11 @@
         android:layout_marginEnd="16dp"
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi commodo rhoncus metus, nec aliquam nisl volutpat vitae. Nullam id lacinia nulla. Aenean tortor diam, egestas vel fermentum vitae, ornare sit amet odio. Fusce vitae tincidunt eros. Nam at quam consequat, feugiat ligula et, efficitur purus. Sed a maximus arcu, vel ornare orci. Donec a congue metus.  In faucibus sapien a bibendum pulvinar. Nam lorem enim, aliquam luctus congue eget, porta sed dolor. Phasellus vulputate feugiat viverra. Proin eu lectus vitae turpis efficitur euismod molestie vel quam. Sed id neque nibh. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam sit amet mauris leo. Aliquam a placerat mauris, quis fringilla justo. Nulla lacus tortor, tincidunt et magna nec, elementum accumsan dolor. Duis sapien ligula, varius ac vulputate quis, accumsan sit amet sem."
         android:textColor="@color/colorSecundary"
+        app:layout_constraintBottom_toTopOf="@+id/buttonViewRecipe"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTime" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewTime"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

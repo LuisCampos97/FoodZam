@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/background"
     android:orientation="horizontal"
-    android:padding="16dp"
-    android:background="@color/colorPrimary">
-    
+    android:padding="16dp">
+
     <ImageView
+        android:id="@+id/imageRow"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:src="@mipmap/ic_launcher"
-        android:id="@+id/imageFavorites"/>
+        android:src="@mipmap/ic_launcher" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/textViewTitleRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Main Title"
-            android:textStyle="bold"
-            android:textColor="@color/colorSecundary"
             android:layout_margin="5dp"
+            android:text="Main Title"
+            android:textColor="@color/colorSecundary"
             android:textSize="20sp"
-            android:id="@+id/textView1"/>
+            android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/textViewDescriptionRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:text="Sub Title"
             android:textColor="@color/colorSecundary"
-            android:layout_margin="5dp"
-            android:textSize="15sp"
-            android:id="@+id/textView2"/>
+            android:textSize="15sp" />
 
     </LinearLayout>
 

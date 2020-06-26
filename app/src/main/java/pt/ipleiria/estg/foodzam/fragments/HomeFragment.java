@@ -2,9 +2,7 @@ package pt.ipleiria.estg.foodzam.fragments;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,6 +10,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.StrictMode;
 import android.provider.MediaStore;
@@ -22,8 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-
-import com.bumptech.glide.Glide;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -39,23 +37,13 @@ import clarifai2.dto.model.Model;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 import pt.ipleiria.estg.foodzam.R;
-import pt.ipleiria.estg.foodzam.SpoonacularAPI;
-import pt.ipleiria.estg.foodzam.model.Recipe;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
-    private static final int GALLERY_REQUEST_CODE = 1;
-    private static final int REQUEST_IMAGE_CAPTURE = 2;
-
-    private ImageView imageView, recipeImageView;
+    private ImageView imageView;
     private Button chooseButton, btnOpenDialog;
 
     ArrayList<String> ingredients = null;
@@ -70,7 +58,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         StrictMode.setThreadPolicy(policy);
 
         imageView = fragment_view.findViewById(R.id.imageView);
-        recipeImageView = fragment_view.findViewById(R.id.recipeImageView);
         chooseButton = fragment_view.findViewById(R.id.chooseButton);
         btnOpenDialog = fragment_view.findViewById(R.id.openDialogButton);
 
@@ -162,7 +149,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             dialog.dismiss();
             String ingredient = ingredients.get(position);
+
             //TODO: Mover para o RecipeFragment e procurar lá por receitas do alimentos
+            Bundle bundle = new Bundle();
+            bundle.putString("ingredient", ingredient);
+
+            RecipeFragment frag = new RecipeFragment();
+            frag.setArguments(bundle);
+
+            FragmentManager fragmentManager = getParentFragmentManager();
+
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, frag);
+            fragmentTransaction.commit();
+
         });
 
         dialog.show();

@@ -1,4 +1,4 @@
-package pt.ipleiria.estg.foodzam;
+package pt.ipleiria.estg.foodzam.helpers;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public interface SpoonacularAPI {
 
     @GET("recipes/findByIngredients")
     Call<List<Recipe>> getRecipesByIngredients(@Query("ingredients") String ingredients,
-                                               @Query("number") String number,
+                                               @Query("number") int number,
                                                @Query("apiKey") String apiKey);
 
     @GET("recipes/{id}/information")

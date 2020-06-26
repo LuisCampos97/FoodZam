@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,8 +17,9 @@ import androidx.fragment.app.Fragment;
 import java.util.List;
 
 import pt.ipleiria.estg.foodzam.R;
-import pt.ipleiria.estg.foodzam.RecipeDetails;
-import pt.ipleiria.estg.foodzam.SpoonacularAPI;
+import pt.ipleiria.estg.foodzam.RecipeDetailsActivity;
+import pt.ipleiria.estg.foodzam.helpers.RecipeListAdapter;
+import pt.ipleiria.estg.foodzam.helpers.SpoonacularAPI;
 import pt.ipleiria.estg.foodzam.model.Recipe;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,11 +53,17 @@ public class RecipeFragment extends Fragment implements View.OnClickListener{
 
         spoonacularAPI = retrofit.create(SpoonacularAPI.class);
 
+        /*if (getArguments().get("ingredient") != null) {
+            String ingredient = getArguments().getString("ingredient");
+            editTextSearch.setText(ingredient);
+            buttonSearch.performClick();
+        } */
+
         return fragment_view;
     }
 
     public void apiCall(String food) {
-        Call<List<Recipe>> listCall = spoonacularAPI.getRecipesByIngredients(food, "1", getString(R.string.spoonacular_api_key));
+        Call<List<Recipe>> listCall = spoonacularAPI.getRecipesByIngredients(food, 5, getString(R.string.spoonacular_api_key));
 
         listCall.enqueue(new Callback<List<Recipe>>() {
             @Override
@@ -69,18 +75,13 @@ public class RecipeFragment extends Fragment implements View.OnClickListener{
 
                 List<Recipe> recipes = response.body();
 
-                //TODO: Custom ListView e popular com as recipes
+                RecipeListAdapter adapter = new RecipeListAdapter(requireActivity(), R.layout.row, recipes);
+                recipesListView.setAdapter(adapter);
 
-                ArrayAdapter arrayAdapter = new ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, recipes);
-                recipesListView.setAdapter(arrayAdapter);
-
-                recipesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(getActivity(), RecipeDetails.class);
-                        intent.putExtra("recipeId", recipes.get(position).getId());
-                        startActivity(intent);
-                    }
+                recipesListView.setOnItemClickListener((parent, view, position, id) -> {
+                    Intent intent = new Intent(getActivity(), RecipeDetailsActivity.class);
+                    intent.putExtra("recipeId", recipes.get(position).getId());
+                    startActivity(intent);
                 });
             }
 

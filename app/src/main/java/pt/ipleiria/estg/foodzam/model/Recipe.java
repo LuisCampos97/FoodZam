@@ -16,6 +16,14 @@ public class Recipe {
     private List<AnalyzedInstructions> analyzedInstructions;
     private List<Ingredient> extendedIngredients;
 
+    public Recipe(String title, String description, String image) {
+        this.title = title;
+        this.title = description;
+        this.image = image;
+    }
+
+    public Recipe() {}
+
     // Getters Methods
     public int getId() {
         return id;
@@ -43,6 +51,34 @@ public class Recipe {
 
     public List<Ingredient> getExtendedIngredients() {
         return extendedIngredients;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setReadyInMinutes(int readyInMinutes) {
+        this.readyInMinutes = readyInMinutes;
+    }
+
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
+
+    public void setAnalyzedInstructions(List<AnalyzedInstructions> analyzedInstructions) {
+        this.analyzedInstructions = analyzedInstructions;
+    }
+
+    public void setExtendedIngredients(List<Ingredient> extendedIngredients) {
+        this.extendedIngredients = extendedIngredients;
     }
 
     @Override

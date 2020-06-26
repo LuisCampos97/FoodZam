@@ -34,8 +34,8 @@
 
     <ListView
         android:id="@+id/recipesListView"
-        android:layout_width="373dp"
-        android:layout_height="477dp"
+        android:layout_width="377dp"
+        android:layout_height="514dp"
         android:layout_marginTop="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

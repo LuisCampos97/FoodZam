@@ -1,7 +1,6 @@
 package pt.ipleiria.estg.foodzam.fragments;
 
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -57,7 +56,7 @@ public class FavoritesFragment extends Fragment {
         int rImgs[];
 
         MyAdapter (Context c, String title[], String description[], int imgs[]){
-            super(c, R.layout.row, R.id.textView1, title);
+            super(c, R.layout.row, R.id.textViewTitleRow, title);
             this.context = c;
             this.rTitle = title;
             this.rDescription = description;
@@ -70,9 +69,9 @@ public class FavoritesFragment extends Fragment {
             LayoutInflater layoutInflater = (LayoutInflater) requireActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             View row = layoutInflater.inflate(R.layout.row, parent, false);
-            ImageView images = row.findViewById(R.id.imageFavorites);
-            TextView myTitle = row.findViewById(R.id.textView1);
-            TextView myDescription = row.findViewById(R.id.textView2);
+            ImageView images = row.findViewById(R.id.imageRow);
+            TextView myTitle = row.findViewById(R.id.textViewTitleRow);
+            TextView myDescription = row.findViewById(R.id.textViewDescriptionRow);
 
             //now set our resources on views
             images.setImageResource(rImgs[position]);
