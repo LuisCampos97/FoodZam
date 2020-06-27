@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,70 +17,31 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
 import pt.ipleiria.estg.foodzam.R;
+import pt.ipleiria.estg.foodzam.RecipeAdapter;
+import pt.ipleiria.estg.foodzam.RecipeItem;
 
 public class FavoritesFragment extends Fragment {
 
-    ListView listView;
-    String mTitle[] = {"Facebook", "Whatsapp","Twitter","Instagram","Youtube"};
-    String mDescription[] = {"Facebook Description", "Whatsapp Description","Twitter Description","Instagram Description","Youtube Description"};
-    int images[] = {R.drawable.face,R.drawable.what,R.drawable.twitter,R.drawable.insta,R.drawable.youtube};
+    private ArrayList<RecipeItem> recipeItems = new ArrayList<>();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState){
         View fragment_view = inflater.inflate(R.layout.fragment_favorites, container, false);
 
-        listView = fragment_view.findViewById(R.id.listViewFavorites);
+        RecyclerView recyclerView = fragment_view.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(new RecipeAdapter(recipeItems, getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //now create an adapter class
-        MyAdapter adapter = new MyAdapter(requireActivity(), mTitle,mDescription,images);
-        listView.setAdapter(adapter);
-
-
-
-        //now set item click on list view
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
+        recipeItems.add(new RecipeItem(R.drawable.a, "Photo 01", "0", "0"));
+        recipeItems.add(new RecipeItem(R.drawable.b, "Photo 02", "1", "0"));
+        recipeItems.add(new RecipeItem(R.drawable.c, "Photo 03", "2", "0"));
+        recipeItems.add(new RecipeItem(R.drawable.d, "Photo 04", "3", "0"));
 
         return fragment_view;
-    }
-
-    class MyAdapter extends ArrayAdapter<String> {
-        Context context;
-        String rTitle[];
-        String rDescription[];
-        int rImgs[];
-
-        MyAdapter (Context c, String title[], String description[], int imgs[]){
-            super(c, R.layout.row, R.id.textViewTitleRow, title);
-            this.context = c;
-            this.rTitle = title;
-            this.rDescription = description;
-            this.rImgs = imgs;
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater layoutInflater = (LayoutInflater) requireActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            View row = layoutInflater.inflate(R.layout.row, parent, false);
-            ImageView images = row.findViewById(R.id.imageRow);
-            TextView myTitle = row.findViewById(R.id.textViewTitleRow);
-            TextView myDescription = row.findViewById(R.id.textViewDescriptionRow);
-
-            //now set our resources on views
-            images.setImageResource(rImgs[position]);
-            myTitle.setText(rTitle[position]);
-            myDescription.setText(rDescription[position]);
-
-            return row;
-        }
     }
 }
