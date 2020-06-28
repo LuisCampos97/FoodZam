@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "666313351874",
+    "firebase_url": "https://foodzam-c81f8.firebaseio.com",
+    "project_id": "foodzam-c81f8",
+    "storage_bucket": "foodzam-c81f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666313351874:android:9bea0c3c35d7300249d15b",
+        "android_client_info": {
+          "package_name": "pt.ipleiria.estg.foodzam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "666313351874-87nm1r6aeeun9f9fbmgnqgai5t41uv5d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pt.ipleiria.estg.foodzam",
+            "certificate_hash": "7f5684cff2d7b0660773efe7459ae33cb1d9a58a"
+          }
+        },
+        {
+          "client_id": "666313351874-uof2acebvig6tgcetqfla119j2kqila4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMgw8Jur-dpm7OdnT5fFKgciPr4oM4jkA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "666313351874-cosdkf5t4cf31jkek7e9bbhs3lo8jnqi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,10 +15,10 @@ public class Recipe {
     private int servings;
     private List<AnalyzedInstructions> analyzedInstructions;
     private List<Ingredient> extendedIngredients;
+    private String summary;
 
-    public Recipe(String title, String description, String image) {
+    public Recipe(String title, String image) {
         this.title = title;
-        this.title = description;
         this.image = image;
     }
 
@@ -53,6 +53,11 @@ public class Recipe {
         return extendedIngredients;
     }
 
+    public String getSummary() {
+        return summary;
+    }
+
+    // Setters Methods
     public void setId(int id) {
         this.id = id;
     }
@@ -79,6 +84,10 @@ public class Recipe {
 
     public void setExtendedIngredients(List<Ingredient> extendedIngredients) {
         this.extendedIngredients = extendedIngredients;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     @Override

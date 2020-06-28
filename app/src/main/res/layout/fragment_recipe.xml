@@ -1,41 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     tools:context=".fragments.RecipeFragment">
 
 
-    <EditText
-        android:id="@+id/editTextSearch"
-        android:layout_width="244dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="Insert the food here"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonSearch"
-        app:layout_constraintHorizontal_bias="0.553"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.061" />
-
-    <Button
-        android:id="@+id/buttonSearch"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="48dp"
-        android:text="Search"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.057" />
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <EditText
+            android:id="@+id/editTextSearch"
+            android:layout_width="293dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorSecundary"
+            android:hint="Insert the ingredient here"
+            android:inputType="textPersonName"
+            android:textColor="@color/text_color"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColorLink="@color/colorSecundary" />
+
+        <Button
+            android:id="@+id/buttonSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:backgroundTint="@color/colorSecundary"
+            android:text="Search"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/recipesListView"
-        android:layout_width="377dp"
-        android:layout_height="514dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,4 +47,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
         app:layout_constraintVertical_bias="0.786" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

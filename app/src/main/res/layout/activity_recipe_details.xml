@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,7 +12,7 @@
         android:id="@+id/iconPeople"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="112dp"
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toEndOf="@+id/textViewTime"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
@@ -73,6 +74,17 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
         app:srcCompat="@drawable/ic_time" />
 
+    <iammert.com.expandablelib.ExpandableLayout
+        android:id="@+id/expandable_layout"
+        android:layout_width="369dp"
+        android:layout_height="199dp"
+        app:childLayout="@layout/expandable_layout_child"
+        app:layout_constraintBottom_toTopOf="@+id/buttonViewRecipe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iconPeople"
+        app:parentLayout="@layout/expandable_layout_parent" />
+
     <Button
         android:id="@+id/buttonViewRecipe"
         android:layout_width="0dp"
@@ -80,28 +92,13 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="50dp"
-        android:background="@color/colorSecundary"
-        android:text="View Recipe"
-        android:textColor="@color/colorPrimary"
+        android:backgroundTint="@color/text_color"
+        android:drawableStart="@drawable/ic_google_calendar"
+        android:text="Add Recipe to Calendar"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi commodo rhoncus metus, nec aliquam nisl volutpat vitae. Nullam id lacinia nulla. Aenean tortor diam, egestas vel fermentum vitae, ornare sit amet odio. Fusce vitae tincidunt eros. Nam at quam consequat, feugiat ligula et, efficitur purus. Sed a maximus arcu, vel ornare orci. Donec a congue metus.  In faucibus sapien a bibendum pulvinar. Nam lorem enim, aliquam luctus congue eget, porta sed dolor. Phasellus vulputate feugiat viverra. Proin eu lectus vitae turpis efficitur euismod molestie vel quam. Sed id neque nibh. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam sit amet mauris leo. Aliquam a placerat mauris, quis fringilla justo. Nulla lacus tortor, tincidunt et magna nec, elementum accumsan dolor. Duis sapien ligula, varius ac vulputate quis, accumsan sit amet sem."
-        android:textColor="@color/colorSecundary"
-        app:layout_constraintBottom_toTopOf="@+id/buttonViewRecipe"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTime"
-        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
