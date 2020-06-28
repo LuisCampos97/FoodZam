@@ -101,4 +101,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <Button
+        android:id="@+id/favoriteButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/ic_favorite_red"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewRecipe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.956"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageViewRecipe"
+        app:layout_constraintVertical_bias="0.931" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
