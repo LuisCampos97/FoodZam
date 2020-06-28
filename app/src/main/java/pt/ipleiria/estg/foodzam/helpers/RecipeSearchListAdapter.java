@@ -18,7 +18,7 @@ import java.util.List;
 import pt.ipleiria.estg.foodzam.R;
 import pt.ipleiria.estg.foodzam.model.Recipe;
 
-public class RecipeListAdapter extends ArrayAdapter<Recipe> {
+public class RecipeSearchListAdapter extends ArrayAdapter<Recipe> {
 
 
     private Context mContext;
@@ -29,7 +29,7 @@ public class RecipeListAdapter extends ArrayAdapter<Recipe> {
         ImageView image;
     }
 
-    public RecipeListAdapter(Context context, int resource, List<Recipe> objects) {
+    public RecipeSearchListAdapter(Context context, int resource, List<Recipe> objects) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;

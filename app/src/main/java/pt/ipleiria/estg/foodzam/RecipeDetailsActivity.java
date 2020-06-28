@@ -20,6 +20,7 @@ import iammert.com.expandablelib.Section;
 import pt.ipleiria.estg.foodzam.helpers.SpoonacularAPI;
 import pt.ipleiria.estg.foodzam.model.Ingredient;
 import pt.ipleiria.estg.foodzam.model.Recipe;
+import pt.ipleiria.estg.foodzam.model.Step;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,7 +34,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     private TextView textViewTitle, textViewTime, textViewPeople;
     private ImageView imageViewRecipe;
-    private ExpandableLayout expandableLayout;
+    private ExpandableLayout expandableLayout, expandableLayout2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         textViewPeople = findViewById(R.id.textViewPeople);
         imageViewRecipe = findViewById(R.id.imageViewRecipe);
         expandableLayout = findViewById(R.id.expandable_layout);
+        expandableLayout2 = findViewById(R.id.expandable_layout);
 
         Bundle bundle = getIntent().getExtras();
         int recipeId = bundle.getInt("recipeId");
@@ -68,13 +70,14 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 }
 
                 Recipe recipe = response.body();
+
                 if(recipe != null) {
                     textViewTitle.setText(recipe.getTitle());
                     textViewTime.setText(recipe.getReadyInMinutes() + " Minutes");
                     textViewPeople.setText(recipe.getServings() + " Servings");
                     Glide.with(RecipeDetailsActivity.this).load(recipe.getImage()).into(imageViewRecipe);
 
-                    expandableLayout.setRenderer(new ExpandableLayout.Renderer<String, Recipe>() {
+                    expandableLayout.setRenderer(new ExpandableLayout.Renderer<String, Ingredient>() {
                         @Override
                         public void renderParent(View view, String title, boolean isExpanded, int parentPosition) {
                             ((TextView) view.findViewById(R.id.expandable_layout_parent_name)).setText(title);
@@ -82,22 +85,37 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void renderChild(View view, Recipe recipeModel, int parentPosition, int childPosition) {
+                        public void renderChild(View view, Ingredient recipeModel, int parentPosition, int childPosition) {
                             System.out.println("POSICAO CHILD: " + childPosition);
                             if(parentPosition == 0) {
                                 //Ingredient List
                                 ((TextView) view.findViewById(R.id.expandable_layout_child_name))
-                                        .setText(recipeModel.getExtendedIngredients().get(0).getRecipeLine());
+                                        .setText(recipeModel.getOriginal());
                             } else if(parentPosition == 1) {
                                 //Step by Step
                             }
                         }
                     });
+
+                    //TODO: Os steps não estão a ver na API
+
+                    /* expandableLayout2.setRenderer(new ExpandableLayout.Renderer<String, Step>() {
+                        @Override
+                        public void renderParent(View view, String title, boolean isExpanded, int parentPosition) {
+                            ((TextView) view.findViewById(R.id.expandable_layout_parent_name)).setText(title);
+                            view.findViewById(R.id.arrow).setBackgroundResource(isExpanded?R.drawable.ic_arrow_up:R.drawable.ic_arrow_down);
+                        }
+
+                        @Override
+                        public void renderChild(View view, Step step, int parentPosition, int childPosition) {
+                            ((TextView) view.findViewById(R.id.expandable_layout_child_name))
+                                    .setText(step.getStep());
+                        }
+                    }); */
+
+                    expandableLayout.addSection(getSection(recipe.getExtendedIngredients(), "Ingredient List"));
+                    //expandableLayout2.addSection(getSectionStep(recipe.getAnalyzedInstructions().get(0).getSteps(), "Step by Step"));
                 }
-
-                expandableLayout.addSection(getSection(recipe, "Ingredient List"));
-                expandableLayout.addSection(getSection(recipe, "Step by Step"));
-
             }
 
             @Override
@@ -107,10 +125,18 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private Section<String, Recipe> getSection(Recipe recipe, String parentTitle) {
-        Section<String, Recipe> section = new Section<>();
+    private Section<String, Ingredient> getSection(List<Ingredient> ingredients, String parentTitle) {
+        Section<String, Ingredient> section = new Section<>();
 
-        section.children.add(recipe);
+        section.children.addAll(ingredients);
+        section.parent = parentTitle;
+        return section;
+    }
+
+    private Section<String, Step> getSectionStep(List<Step> steps, String parentTitle) {
+        Section<String, Step> section = new Section<>();
+
+        section.children.addAll(steps);
         section.parent = parentTitle;
         return section;
     }

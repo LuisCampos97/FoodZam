@@ -76,8 +76,8 @@
 
     <iammert.com.expandablelib.ExpandableLayout
         android:id="@+id/expandable_layout"
-        android:layout_width="369dp"
-        android:layout_height="199dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:childLayout="@layout/expandable_layout_child"
         app:layout_constraintBottom_toTopOf="@+id/buttonViewRecipe"
         app:layout_constraintEnd_toEndOf="parent"

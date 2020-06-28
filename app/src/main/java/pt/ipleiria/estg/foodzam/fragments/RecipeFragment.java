@@ -1,6 +1,5 @@
 package pt.ipleiria.estg.foodzam.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,7 +19,7 @@ import java.util.List;
 
 import pt.ipleiria.estg.foodzam.R;
 import pt.ipleiria.estg.foodzam.RecipeDetailsActivity;
-import pt.ipleiria.estg.foodzam.helpers.RecipeListAdapter;
+import pt.ipleiria.estg.foodzam.helpers.RecipeSearchListAdapter;
 import pt.ipleiria.estg.foodzam.helpers.SpoonacularAPI;
 import pt.ipleiria.estg.foodzam.model.Recipe;
 import retrofit2.Call;
@@ -66,7 +64,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener{
     }
 
     public void apiCall(String food) {
-        Call<List<Recipe>> listCall = spoonacularAPI.getRecipesByIngredients(food, 5, getString(R.string.spoonacular_api_key));
+        Call<List<Recipe>> listCall = spoonacularAPI.getRecipesByIngredients(food, 10, getString(R.string.spoonacular_api_key));
 
         listCall.enqueue(new Callback<List<Recipe>>() {
             @Override
@@ -78,7 +76,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener{
 
                 List<Recipe> recipes = response.body();
 
-                RecipeListAdapter adapter = new RecipeListAdapter(requireActivity(), R.layout.row, recipes);
+                RecipeSearchListAdapter adapter = new RecipeSearchListAdapter(requireActivity(), R.layout.row_listview_fragment_recipe, recipes);
                 recipesListView.setAdapter(adapter);
 
                 recipesListView.setOnItemClickListener((parent, view, position, id) -> {
@@ -100,7 +98,8 @@ public class RecipeFragment extends Fragment implements View.OnClickListener{
         if (v.getId() == R.id.buttonSearch) {
             String ingredient = editTextSearch.getText().toString();
             apiCall(ingredient);
-            //TODO: Corigir erro da lista ultrapassar o inputSearch
+
+            // Hide Keyboard
             InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             in.hideSoftInputFromWindow(recipesListView.getApplicationWindowToken(), 0);
         }

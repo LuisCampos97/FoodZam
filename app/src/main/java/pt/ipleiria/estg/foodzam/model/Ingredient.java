@@ -8,22 +8,29 @@ public class Ingredient {
 
     private String name;
 
-    @SerializedName("original")
-    private String recipeLine;
+    private String original;
 
     public String getName() {
         return name;
     }
 
-    public String getRecipeLine() {
-        return recipeLine;
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
     }
 
     @Override
     public String toString() {
         return "Ingredient{" +
                 "name='" + name + '\'' +
-                ", recipeLine='" + recipeLine + '\'' +
+                ", recipeLine='" + original + '\'' +
                 '}';
     }
 }

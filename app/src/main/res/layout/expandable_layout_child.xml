@@ -6,13 +6,15 @@
     <RelativeLayout
         android:background="@color/background"
         android:layout_width="match_parent"
-        android:layout_height="56dp" />
+        android:layout_height="30dp" >
 
-    <TextView
-        android:id="@+id/expandable_layout_child_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_margin="16dp"
-        android:textColor="@color/text_color"/>
+        <TextView
+            android:id="@+id/expandable_layout_child_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
+            android:textColor="@color/text_color" />
+    </RelativeLayout>
+
 </LinearLayout>
