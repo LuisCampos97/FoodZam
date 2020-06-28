@@ -105,7 +105,7 @@
         android:id="@+id/favoriteButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@drawable/ic_favorite_red"
+        android:background="@drawable/ic_favorite_shadow"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewRecipe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.956"

@@ -3,17 +3,22 @@ package pt.ipleiria.estg.foodzam;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import iammert.com.expandablelib.ExpandableLayout;
 import iammert.com.expandablelib.Section;
@@ -34,7 +39,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     private TextView textViewTitle, textViewTime, textViewPeople;
     private ImageView imageViewRecipe;
+    private Button favoriteButton;
     private ExpandableLayout expandableLayout, expandableLayout2;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +56,13 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         spoonacularAPI = retrofit.create(SpoonacularAPI.class);
 
+        db = FirebaseFirestore.getInstance();
+
         textViewTitle = findViewById(R.id.textViewTitle);
         textViewTime = findViewById(R.id.textViewTime);
         textViewPeople = findViewById(R.id.textViewPeople);
         imageViewRecipe = findViewById(R.id.imageViewRecipe);
+        favoriteButton = findViewById(R.id.favoriteButton);
         expandableLayout = findViewById(R.id.expandable_layout);
         expandableLayout2 = findViewById(R.id.expandable_layout);
 
@@ -70,12 +80,59 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 }
 
                 Recipe recipe = response.body();
+                AtomicBoolean isFavorite = new AtomicBoolean(false);
+                AtomicReference<String> documentId = new AtomicReference<>("");
 
                 if(recipe != null) {
                     textViewTitle.setText(recipe.getTitle());
                     textViewTime.setText(recipe.getReadyInMinutes() + " Minutes");
                     textViewPeople.setText(recipe.getServings() + " Servings");
                     Glide.with(RecipeDetailsActivity.this).load(recipe.getImage()).into(imageViewRecipe);
+
+                    //Verificar se a receita está na base de dados
+                    favoriteButton.setOnClickListener(v -> {
+                        db.collection("favorites")
+                                .whereEqualTo("id", recipe.getId())
+                                .get()
+                                .addOnCompleteListener(task -> {
+                                    if(task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            if((Long) document.getData().get("id") == recipe.getId()) {
+                                                favoriteButton.setBackgroundResource(R.drawable.ic_favorite_red);
+                                                isFavorite.set(true);
+                                                documentId.set(document.getId());
+                                            } else {
+                                                favoriteButton.setBackgroundResource(R.drawable.ic_favorite_shadow);
+                                                isFavorite.set(false);
+                                            }
+                                        }
+
+                                        System.out.println("FAVORITE: " + isFavorite);
+
+                                        if(!isFavorite.get()) {
+                                            Map<String, Object> recipeMap = new HashMap();
+                                            recipeMap.put("id", recipe.getId());
+
+                                            db.collection("favorites")
+                                                    .add(recipeMap)
+                                                    .addOnSuccessListener(documentReference -> {
+                                                        favoriteButton.setBackgroundResource(R.drawable.ic_favorite_red);
+                                                        isFavorite.set(true);
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                    });
+                                        } else {
+                                            db.collection("favorites")
+                                                    .document(String.valueOf(documentId))
+                                                    .delete()
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        favoriteButton.setBackgroundResource(R.drawable.ic_favorite_shadow);
+                                                        isFavorite.set(false);
+                                                    });
+                                        }
+                                    }
+                                });
+                    });
 
                     expandableLayout.setRenderer(new ExpandableLayout.Renderer<String, Ingredient>() {
                         @Override
