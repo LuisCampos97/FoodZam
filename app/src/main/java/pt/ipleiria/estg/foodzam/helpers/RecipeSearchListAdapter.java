@@ -20,7 +20,6 @@ import pt.ipleiria.estg.foodzam.model.Recipe;
 
 public class RecipeSearchListAdapter extends ArrayAdapter<Recipe> {
 
-
     private Context mContext;
     private int mResource;
 

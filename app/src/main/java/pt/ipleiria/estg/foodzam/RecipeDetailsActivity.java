@@ -89,7 +89,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     textViewPeople.setText(recipe.getServings() + " Servings");
                     Glide.with(RecipeDetailsActivity.this).load(recipe.getImage()).into(imageViewRecipe);
 
-                    //Verificar se a receita está na base de dados
                     favoriteButton.setOnClickListener(v -> {
                         db.collection("favorites")
                                 .whereEqualTo("id", recipe.getId())
@@ -106,8 +105,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                                                 isFavorite.set(false);
                                             }
                                         }
-
-                                        System.out.println("FAVORITE: " + isFavorite);
 
                                         if(!isFavorite.get()) {
                                             Map<String, Object> recipeMap = new HashMap();

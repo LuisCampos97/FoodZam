@@ -1,10 +1,8 @@
 package pt.ipleiria.estg.foodzam.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,36 +10,82 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.List;
 
 import pt.ipleiria.estg.foodzam.R;
-import pt.ipleiria.estg.foodzam.RecipeAdapter;
-import pt.ipleiria.estg.foodzam.RecipeItem;
+import pt.ipleiria.estg.foodzam.helpers.FavoritesRecipesAdapter;
+import pt.ipleiria.estg.foodzam.helpers.SpoonacularAPI;
+import pt.ipleiria.estg.foodzam.model.Recipe;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FavoritesFragment extends Fragment {
 
-    private ArrayList<RecipeItem> recipeItems = new ArrayList<>();
+    Retrofit retrofit;
+    SpoonacularAPI spoonacularAPI;
+    RecyclerView recyclerView;
+    private FirebaseFirestore db;
+    private String ids;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState){
         View fragment_view = inflater.inflate(R.layout.fragment_favorites, container, false);
 
-        RecyclerView recyclerView = fragment_view.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new RecipeAdapter(recipeItems, getActivity()));
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        retrofit = new Retrofit.Builder().baseUrl("https://api.spoonacular.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        recipeItems.add(new RecipeItem(R.drawable.a, "Photo 01", "0", "0"));
-        recipeItems.add(new RecipeItem(R.drawable.b, "Photo 02", "1", "0"));
-        recipeItems.add(new RecipeItem(R.drawable.c, "Photo 03", "2", "0"));
-        recipeItems.add(new RecipeItem(R.drawable.d, "Photo 04", "3", "0"));
+        spoonacularAPI = retrofit.create(SpoonacularAPI.class);
+
+        recyclerView = fragment_view.findViewById(R.id.recyclerView);
+
+        ids = "";
+
+        db = FirebaseFirestore.getInstance();
+
+        db.collection("favorites").get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    ids += document.getData().get("id") + ",";
+                }
+
+                apiCall(ids);
+
+            }
+        });
 
         return fragment_view;
+    }
+
+    public void apiCall(String ids) {
+        Call<List<Recipe>> listCall = spoonacularAPI.getRecipeInformationByIds(ids, getString(R.string.spoonacular_api_key));
+
+        listCall.enqueue(new Callback<List<Recipe>>() {
+            @Override
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                if (!response.isSuccessful()) {
+                    System.out.println("Code: " + response.code());
+                    return;
+                }
+
+                List<Recipe> recipes = response.body();
+
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setAdapter(new FavoritesRecipesAdapter(recipes, getActivity()));
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            }
+
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                System.out.println(t.getMessage());
+            }
+        });
     }
 }
