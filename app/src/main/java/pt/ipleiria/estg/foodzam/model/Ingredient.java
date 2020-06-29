@@ -7,8 +7,14 @@ import com.google.gson.annotations.SerializedName;
 public class Ingredient {
 
     private String name;
-
     private String original;
+
+    public Ingredient(String original) {
+        this.original = original;
+    }
+
+    public Ingredient() {
+    }
 
     public String getName() {
         return name;
@@ -28,9 +34,6 @@ public class Ingredient {
 
     @Override
     public String toString() {
-        return "Ingredient{" +
-                "name='" + name + '\'' +
-                ", recipeLine='" + original + '\'' +
-                '}';
+        return original;
     }
 }

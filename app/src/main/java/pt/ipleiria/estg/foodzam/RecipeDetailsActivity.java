@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -20,12 +22,10 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import iammert.com.expandablelib.ExpandableLayout;
-import iammert.com.expandablelib.Section;
+import pt.ipleiria.estg.foodzam.helpers.IngredientsAdapter;
 import pt.ipleiria.estg.foodzam.helpers.SpoonacularAPI;
-import pt.ipleiria.estg.foodzam.model.Ingredient;
+import pt.ipleiria.estg.foodzam.helpers.StepsAdapter;
 import pt.ipleiria.estg.foodzam.model.Recipe;
-import pt.ipleiria.estg.foodzam.model.Step;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,10 +37,11 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     Retrofit retrofit;
     SpoonacularAPI spoonacularAPI;
 
-    private TextView textViewTitle, textViewTime, textViewPeople;
+    private TextView textViewTitle, textViewTime, textViewPeople, textViewIngredientsListTitle, textViewStepsListTitle;
     private ImageView imageViewRecipe;
     private Button favoriteButton;
-    private ExpandableLayout expandableLayout, expandableLayout2;
+    private ListView ingredientListView, stepsListView;
+
     private FirebaseFirestore db;
 
     @Override
@@ -62,9 +63,14 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         textViewTime = findViewById(R.id.textViewTime);
         textViewPeople = findViewById(R.id.textViewPeople);
         imageViewRecipe = findViewById(R.id.imageViewRecipe);
+        ingredientListView = findViewById(R.id.ingredientList);
+        stepsListView = findViewById(R.id.stepsList);
         favoriteButton = findViewById(R.id.favoriteButton);
-        expandableLayout = findViewById(R.id.expandable_layout);
-        expandableLayout2 = findViewById(R.id.expandable_layout);
+        textViewIngredientsListTitle = findViewById(R.id.ingredientListTitle);
+        textViewStepsListTitle = findViewById(R.id.stepsListTitle);
+
+        textViewIngredientsListTitle.setVisibility(View.GONE);
+        textViewStepsListTitle.setVisibility(View.GONE);
 
         Bundle bundle = getIntent().getExtras();
         int recipeId = bundle.getInt("recipeId");
@@ -107,7 +113,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
                                     favoriteButton.setOnClickListener(v -> {
                                         if (!isFavorite.get()) {
-                                            Map<String, Object> recipeMap = new HashMap();
+                                            Map<String, Integer> recipeMap = new HashMap();
                                             recipeMap.put("id", recipe.getId());
 
                                             db.collection("favorites")
@@ -131,44 +137,19 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                                 }
                             });
 
-                    expandableLayout.setRenderer(new ExpandableLayout.Renderer<String, Ingredient>() {
-                        @Override
-                        public void renderParent(View view, String title, boolean isExpanded, int parentPosition) {
-                            ((TextView) view.findViewById(R.id.expandable_layout_parent_name)).setText(title);
-                            view.findViewById(R.id.arrow).setBackgroundResource(isExpanded ? R.drawable.ic_arrow_up : R.drawable.ic_arrow_down);
-                        }
+                    if(!recipe.getExtendedIngredients().isEmpty()) {
+                        IngredientsAdapter ingredientsListAdapter;
+                        ingredientsListAdapter = new IngredientsAdapter(getBaseContext(), R.layout.row_ingredient_list, recipe.getExtendedIngredients());
+                        ingredientListView.setAdapter(ingredientsListAdapter);
+                        textViewIngredientsListTitle.setVisibility(View.VISIBLE);
+                    }
 
-                        @Override
-                        public void renderChild(View view, Ingredient recipeModel, int parentPosition, int childPosition) {
-                            System.out.println("POSICAO CHILD: " + childPosition);
-                            if (parentPosition == 0) {
-                                //Ingredient List
-                                ((TextView) view.findViewById(R.id.expandable_layout_child_name))
-                                        .setText(recipeModel.getOriginal());
-                            } else if (parentPosition == 1) {
-                                //Step by Step
-                            }
-                        }
-                    });
-
-                    //TODO: Os steps não estão a ver na API
-
-                    /* expandableLayout2.setRenderer(new ExpandableLayout.Renderer<String, Step>() {
-                        @Override
-                        public void renderParent(View view, String title, boolean isExpanded, int parentPosition) {
-                            ((TextView) view.findViewById(R.id.expandable_layout_parent_name)).setText(title);
-                            view.findViewById(R.id.arrow).setBackgroundResource(isExpanded?R.drawable.ic_arrow_up:R.drawable.ic_arrow_down);
-                        }
-
-                        @Override
-                        public void renderChild(View view, Step step, int parentPosition, int childPosition) {
-                            ((TextView) view.findViewById(R.id.expandable_layout_child_name))
-                                    .setText(step.getStep());
-                        }
-                    }); */
-
-                    expandableLayout.addSection(getSection(recipe.getExtendedIngredients(), "Ingredient List"));
-                    //expandableLayout2.addSection(getSectionStep(recipe.getAnalyzedInstructions().get(0).getSteps(), "Step by Step"));
+                    if (!recipe.getAnalyzedInstructions().isEmpty()) {
+                        StepsAdapter stepsAdapter;
+                        stepsAdapter = new StepsAdapter(getBaseContext(), R.layout.row_step_list, recipe.getAnalyzedInstructions().get(0).getSteps());
+                        stepsListView.setAdapter(stepsAdapter);
+                        textViewStepsListTitle.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
@@ -177,22 +158,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 System.out.println(t.getMessage());
             }
         });
-    }
-
-    private Section<String, Ingredient> getSection(List<Ingredient> ingredients, String parentTitle) {
-        Section<String, Ingredient> section = new Section<>();
-
-        section.children.addAll(ingredients);
-        section.parent = parentTitle;
-        return section;
-    }
-
-    private Section<String, Step> getSectionStep(List<Step> steps, String parentTitle) {
-        Section<String, Step> section = new Section<>();
-
-        section.children.addAll(steps);
-        section.parent = parentTitle;
-        return section;
     }
 
     @Override
