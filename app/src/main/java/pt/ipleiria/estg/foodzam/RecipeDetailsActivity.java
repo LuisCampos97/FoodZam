@@ -3,10 +3,10 @@ package pt.ipleiria.estg.foodzam;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -17,7 +17,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -39,7 +38,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     private TextView textViewTitle, textViewTime, textViewPeople, textViewIngredientsListTitle, textViewStepsListTitle;
     private ImageView imageViewRecipe;
-    private Button favoriteButton;
+    private Button favoriteButton, addToCalendarButton;
     private ListView ingredientListView, stepsListView;
 
     private FirebaseFirestore db;
@@ -68,6 +67,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         favoriteButton = findViewById(R.id.favoriteButton);
         textViewIngredientsListTitle = findViewById(R.id.ingredientListTitle);
         textViewStepsListTitle = findViewById(R.id.stepsListTitle);
+        addToCalendarButton = findViewById(R.id.addToCalendarButton);
 
         textViewIngredientsListTitle.setVisibility(View.GONE);
         textViewStepsListTitle.setVisibility(View.GONE);
@@ -150,6 +150,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                         stepsListView.setAdapter(stepsAdapter);
                         textViewStepsListTitle.setVisibility(View.VISIBLE);
                     }
+
+                    addToCalendarButton.setOnClickListener(v -> openDialog(recipe));
                 }
             }
 
@@ -158,6 +160,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 System.out.println(t.getMessage());
             }
         });
+    }
+
+    private void openDialog(Recipe recipe) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_to_calendar, null);
+
+        alertDialog.setView(dialogView);
+        AlertDialog dialog = alertDialog.create();
+
+        dialog.show();
     }
 
     @Override

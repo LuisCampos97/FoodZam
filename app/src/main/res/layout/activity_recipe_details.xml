@@ -16,7 +16,8 @@
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toEndOf="@+id/textViewTime"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
-        app:srcCompat="@drawable/ic_people" />
+        app:srcCompat="@drawable/ic_people"
+        android:contentDescription="TODO" />
 
     <ImageView
         android:id="@+id/imageViewRecipe"
@@ -74,7 +75,7 @@
         app:srcCompat="@drawable/ic_time" />
 
     <Button
-        android:id="@+id/buttonViewRecipe"
+        android:id="@+id/addToCalendarButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -134,7 +135,7 @@
         android:layout_height="175sp"
         android:orientation="vertical"
         android:padding="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonViewRecipe"
+        app:layout_constraintBottom_toTopOf="@+id/addToCalendarButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2">

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:context=".fragments.RecipeFragment">
+    tools:context=".fragments.RecipeSearchFragment">
 
 
     <RelativeLayout
@@ -35,6 +35,18 @@
             android:text="Search"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/recipesListViewEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foregroundGravity="center_vertical|center_horizontal"
+        android:text="TextView"
+        android:textColor="@color/colorSecundary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:padding="16dp"/>
 
     <ListView
         android:id="@+id/recipesListView"

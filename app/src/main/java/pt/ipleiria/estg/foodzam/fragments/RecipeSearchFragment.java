@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,11 +29,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RecipeFragment extends Fragment implements View.OnClickListener{
+public class RecipeSearchFragment extends Fragment implements View.OnClickListener{
 
     private EditText editTextSearch;
     private Button buttonSearch;
     private ListView recipesListView;
+    private TextView emptyRecipesListView;
 
     Retrofit retrofit;
     SpoonacularAPI spoonacularAPI;
@@ -40,11 +42,12 @@ public class RecipeFragment extends Fragment implements View.OnClickListener{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View fragment_view = inflater.inflate(R.layout.fragment_recipe, container, false);
+        View fragment_view = inflater.inflate(R.layout.fragment_recipe_search, container, false);
 
         editTextSearch = fragment_view.findViewById(R.id.editTextSearch);
         buttonSearch = fragment_view.findViewById(R.id.buttonSearch);
         recipesListView = fragment_view.findViewById(R.id.recipesListView);
+        emptyRecipesListView = fragment_view.findViewById(R.id.recipesListViewEmpty);
 
         buttonSearch.setOnClickListener(this);
 
@@ -54,11 +57,11 @@ public class RecipeFragment extends Fragment implements View.OnClickListener{
 
         spoonacularAPI = retrofit.create(SpoonacularAPI.class);
 
-        /*if (getArguments().get("ingredient") != null) {
+        if (getArguments() != null && getArguments().get("ingredient") != null) {
             String ingredient = getArguments().getString("ingredient");
             editTextSearch.setText(ingredient);
             buttonSearch.performClick();
-        } */
+        }
 
         return fragment_view;
     }
@@ -76,14 +79,20 @@ public class RecipeFragment extends Fragment implements View.OnClickListener{
 
                 List<Recipe> recipes = response.body();
 
-                RecipeSearchListAdapter adapter = new RecipeSearchListAdapter(requireActivity(), R.layout.row_listview_fragment_recipe, recipes);
-                recipesListView.setAdapter(adapter);
+                if(recipes.isEmpty()) {
+                    emptyRecipesListView.setVisibility(View.VISIBLE);
+                    emptyRecipesListView.setText("No results were found...");
+                } else {
+                    emptyRecipesListView.setVisibility(View.GONE);
+                    RecipeSearchListAdapter adapter = new RecipeSearchListAdapter(requireActivity(), R.layout.row_listview_fragment_recipe, recipes);
+                    recipesListView.setAdapter(adapter);
 
-                recipesListView.setOnItemClickListener((parent, view, position, id) -> {
-                    Intent intent = new Intent(getActivity(), RecipeDetailsActivity.class);
-                    intent.putExtra("recipeId", recipes.get(position).getId());
-                    startActivity(intent);
-                });
+                    recipesListView.setOnItemClickListener((parent, view, position, id) -> {
+                        Intent intent = new Intent(getActivity(), RecipeDetailsActivity.class);
+                        intent.putExtra("recipeId", recipes.get(position).getId());
+                        startActivity(intent);
+                    });
+                }
             }
 
             @Override

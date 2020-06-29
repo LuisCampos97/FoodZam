@@ -7,12 +7,25 @@
     android:orientation="vertical"
     tools:context=".fragments.FavoritesFragment">
 
+    <TextView
+        android:id="@+id/emptyRecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="@color/colorSecundary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="?attr/actionBarSize"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false"
+        android:paddingBottom="?attr/actionBarSize" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

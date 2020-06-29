@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -42,7 +41,7 @@ import pt.ipleiria.estg.foodzam.R;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class HomeFragment extends Fragment implements View.OnClickListener {
+public class PredictFragment extends Fragment implements View.OnClickListener {
 
     private ImageView imageView;
     private Button chooseButton, btnOpenDialog;
@@ -53,7 +52,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View fragment_view = inflater.inflate(R.layout.fragment_home, container, false);
+        View fragment_view = inflater.inflate(R.layout.fragment_predict, container, false);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -130,7 +129,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public void openDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(requireActivity());
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_item, null);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_ingredient_predict, null);
         ListView listView = dialogView.findViewById(R.id.listView);
         Button btnCancel = dialogView.findViewById(R.id.btnCancel);
 
@@ -151,18 +150,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             dialog.dismiss();
             String ingredient = ingredients.get(position);
 
-            //TODO: Mover "ingredient" para o RecipeFragment e procurar lá por receitas do alimentos
             Bundle bundle = new Bundle();
             bundle.putString("ingredient", ingredient);
 
-            RecipeFragment frag = new RecipeFragment();
+            RecipeSearchFragment frag = new RecipeSearchFragment();
             frag.setArguments(bundle);
 
-            FragmentManager fragmentManager = getParentFragmentManager();
+            getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, frag).commit();
 
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, frag);
-            fragmentTransaction.commit();
+            //FragmentManager fragmentManager = getParentFragmentManager();
+
+            //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            //fragmentTransaction.replace(R.id.fragment_container, frag);
+            //fragmentTransaction.commit();
 
         });
 

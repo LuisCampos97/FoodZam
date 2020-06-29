@@ -8,9 +8,9 @@ import android.os.Bundle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import pt.ipleiria.estg.foodzam.fragments.FavoritesFragment;
-import pt.ipleiria.estg.foodzam.fragments.HomeFragment;
+import pt.ipleiria.estg.foodzam.fragments.PredictFragment;
 import pt.ipleiria.estg.foodzam.fragments.ProfileFragment;
-import pt.ipleiria.estg.foodzam.fragments.RecipeFragment;
+import pt.ipleiria.estg.foodzam.fragments.RecipeSearchFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navbar);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PredictFragment()).commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = menuItem -> {
@@ -31,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
 
         switch  (menuItem.getItemId()){
             case R.id.predictFragment:
-                selectedFragment = new HomeFragment();
+                selectedFragment = new PredictFragment();
                 break;
             case R.id.recipesFragment:
-                selectedFragment = new RecipeFragment();
+                selectedFragment = new RecipeSearchFragment();
                 break;
             case R.id.profileFragment:
                 selectedFragment = new ProfileFragment();

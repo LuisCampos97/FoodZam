@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,14 +31,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FavoritesFragment extends Fragment {
 
-    Retrofit retrofit;
-    SpoonacularAPI spoonacularAPI;
-    RecyclerView recyclerView;
+    private Retrofit retrofit;
+    private SpoonacularAPI spoonacularAPI;
+    private RecyclerView recyclerView;
     private FirebaseFirestore db;
     private String ids;
+    private TextView emptyRecyclerViewTV;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState){
+                             ViewGroup container, Bundle savedInstanceState) {
         View fragment_view = inflater.inflate(R.layout.fragment_favorites, container, false);
 
         retrofit = new Retrofit.Builder().baseUrl("https://api.spoonacular.com/")
@@ -47,18 +50,24 @@ public class FavoritesFragment extends Fragment {
         spoonacularAPI = retrofit.create(SpoonacularAPI.class);
 
         recyclerView = fragment_view.findViewById(R.id.recyclerView);
+        emptyRecyclerViewTV = fragment_view.findViewById(R.id.emptyRecyclerView);
+        emptyRecyclerViewTV.setVisibility(View.GONE);
 
         ids = "";
 
         db = FirebaseFirestore.getInstance();
         db.collection("favorites").get().addOnCompleteListener(task -> {
-            if(task.isSuccessful()) {
+            if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     ids += document.getData().get("id") + ",";
                 }
 
-                apiCall(ids);
-
+                if (ids != "") {
+                    apiCall(ids);
+                } else {
+                    emptyRecyclerViewTV.setVisibility(View.VISIBLE);
+                    emptyRecyclerViewTV.setText("You don't have any favorite recipe.");
+                }
             }
         });
 
