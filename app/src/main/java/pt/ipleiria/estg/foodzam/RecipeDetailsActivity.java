@@ -83,30 +83,30 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 AtomicBoolean isFavorite = new AtomicBoolean(false);
                 AtomicReference<String> documentId = new AtomicReference<>("");
 
-                if(recipe != null) {
+                if (recipe != null) {
                     textViewTitle.setText(recipe.getTitle());
                     textViewTime.setText(recipe.getReadyInMinutes() + " Minutes");
                     textViewPeople.setText(recipe.getServings() + " Servings");
                     Glide.with(RecipeDetailsActivity.this).load(recipe.getImage()).into(imageViewRecipe);
 
-                    favoriteButton.setOnClickListener(v -> {
-                        db.collection("favorites")
-                                .whereEqualTo("id", recipe.getId())
-                                .get()
-                                .addOnCompleteListener(task -> {
-                                    if(task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            if((Long) document.getData().get("id") == recipe.getId()) {
-                                                favoriteButton.setBackgroundResource(R.drawable.ic_favorite_red);
-                                                isFavorite.set(true);
-                                                documentId.set(document.getId());
-                                            } else {
-                                                favoriteButton.setBackgroundResource(R.drawable.ic_favorite_shadow);
-                                                isFavorite.set(false);
-                                            }
+                    db.collection("favorites")
+                            .whereEqualTo("id", recipe.getId())
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if ((Long) document.getData().get("id") == recipe.getId()) {
+                                            favoriteButton.setBackgroundResource(R.drawable.ic_favorite_red);
+                                            isFavorite.set(true);
+                                            documentId.set(document.getId());
+                                        } else {
+                                            favoriteButton.setBackgroundResource(R.drawable.ic_favorite_shadow);
+                                            isFavorite.set(false);
                                         }
+                                    }
 
-                                        if(!isFavorite.get()) {
+                                    favoriteButton.setOnClickListener(v -> {
+                                        if (!isFavorite.get()) {
                                             Map<String, Object> recipeMap = new HashMap();
                                             recipeMap.put("id", recipe.getId());
 
@@ -127,25 +127,25 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                                                         isFavorite.set(false);
                                                     });
                                         }
-                                    }
-                                });
-                    });
+                                    });
+                                }
+                            });
 
                     expandableLayout.setRenderer(new ExpandableLayout.Renderer<String, Ingredient>() {
                         @Override
                         public void renderParent(View view, String title, boolean isExpanded, int parentPosition) {
                             ((TextView) view.findViewById(R.id.expandable_layout_parent_name)).setText(title);
-                            view.findViewById(R.id.arrow).setBackgroundResource(isExpanded?R.drawable.ic_arrow_up:R.drawable.ic_arrow_down);
+                            view.findViewById(R.id.arrow).setBackgroundResource(isExpanded ? R.drawable.ic_arrow_up : R.drawable.ic_arrow_down);
                         }
 
                         @Override
                         public void renderChild(View view, Ingredient recipeModel, int parentPosition, int childPosition) {
                             System.out.println("POSICAO CHILD: " + childPosition);
-                            if(parentPosition == 0) {
+                            if (parentPosition == 0) {
                                 //Ingredient List
                                 ((TextView) view.findViewById(R.id.expandable_layout_child_name))
                                         .setText(recipeModel.getOriginal());
-                            } else if(parentPosition == 1) {
+                            } else if (parentPosition == 1) {
                                 //Step by Step
                             }
                         }

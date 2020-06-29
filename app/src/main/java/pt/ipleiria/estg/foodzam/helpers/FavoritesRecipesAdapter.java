@@ -27,11 +27,12 @@ import pt.ipleiria.estg.foodzam.R;
 import pt.ipleiria.estg.foodzam.RecipeDetailsActivity;
 import pt.ipleiria.estg.foodzam.model.Recipe;
 
-public class FavoritesRecipesAdapter extends RecyclerView.Adapter<FavoritesRecipesAdapter.ViewHolder> implements View.OnClickListener {
+public class FavoritesRecipesAdapter extends RecyclerView.Adapter<FavoritesRecipesAdapter.ViewHolder> {
 
     private List<Recipe> recipeItems;
     private Context context;
     private FirebaseFirestore db;
+    private View.OnClickListener mClickListener;
 
     public FavoritesRecipesAdapter(List<Recipe> recipeItems, Context context){
         this.recipeItems = recipeItems;
@@ -43,7 +44,19 @@ public class FavoritesRecipesAdapter extends RecyclerView.Adapter<FavoritesRecip
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card_favorites_list, parent, false);
-        return new ViewHolder(view);
+        ViewHolder holder = new ViewHolder(view);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClickListener.onClick(v);
+            }
+        });
+
+        return holder;
+    }
+
+    public void setClickListener(View.OnClickListener callback) {
+        mClickListener = callback;
     }
 
     @Override
@@ -57,14 +70,6 @@ public class FavoritesRecipesAdapter extends RecyclerView.Adapter<FavoritesRecip
     @Override
     public int getItemCount() {
         return recipeItems.size();
-    }
-
-    @Override
-    public void onClick(View v) {
-        //TODO: Click no card para ir para os RecipeDetails
-        //Intent intent = new Intent(context, RecipeDetailsActivity.class);
-        //intent.putExtra("recipeId", recipeItems.get(position).getId());
-        //context.startActivity(intent);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

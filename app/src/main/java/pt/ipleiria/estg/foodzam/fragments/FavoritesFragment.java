@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.foodzam.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.List;
 
 import pt.ipleiria.estg.foodzam.R;
+import pt.ipleiria.estg.foodzam.RecipeDetailsActivity;
 import pt.ipleiria.estg.foodzam.helpers.FavoritesRecipesAdapter;
 import pt.ipleiria.estg.foodzam.helpers.SpoonacularAPI;
 import pt.ipleiria.estg.foodzam.model.Recipe;
@@ -49,7 +51,6 @@ public class FavoritesFragment extends Fragment {
         ids = "";
 
         db = FirebaseFirestore.getInstance();
-
         db.collection("favorites").get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
@@ -78,8 +79,17 @@ public class FavoritesFragment extends Fragment {
                 List<Recipe> recipes = response.body();
 
                 recyclerView.setHasFixedSize(true);
-                recyclerView.setAdapter(new FavoritesRecipesAdapter(recipes, getActivity()));
+                FavoritesRecipesAdapter adapter = new FavoritesRecipesAdapter(recipes, getActivity());
+                recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                adapter.notifyDataSetChanged();
+
+                adapter.setClickListener(v -> {
+                    int position = recyclerView.indexOfChild(v);
+                    Intent intent = new Intent(getActivity(), RecipeDetailsActivity.class);
+                    intent.putExtra("recipeId", recipes.get(position).getId());
+                    startActivity(intent);
+                });
             }
 
             @Override

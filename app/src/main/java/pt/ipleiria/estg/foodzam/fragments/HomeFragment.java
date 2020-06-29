@@ -150,7 +150,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             dialog.dismiss();
             String ingredient = ingredients.get(position);
 
-            //TODO: Mover para o RecipeFragment e procurar lá por receitas do alimentos
+            //TODO: Mover "ingredient" para o RecipeFragment e procurar lá por receitas do alimentos
             Bundle bundle = new Bundle();
             bundle.putString("ingredient", ingredient);
 
