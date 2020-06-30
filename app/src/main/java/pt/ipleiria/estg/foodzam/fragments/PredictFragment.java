@@ -157,13 +157,6 @@ public class PredictFragment extends Fragment implements View.OnClickListener {
             frag.setArguments(bundle);
 
             getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, frag).commit();
-
-            //FragmentManager fragmentManager = getParentFragmentManager();
-
-            //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            //fragmentTransaction.replace(R.id.fragment_container, frag);
-            //fragmentTransaction.commit();
-
         });
 
         dialog.show();
