@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,9 +20,21 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.bumptech.glide.Glide;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.DateTime;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,12 +63,32 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DatePick
 
     private FirebaseFirestore db;
 
+    final HttpTransport transport = AndroidHttp.newCompatibleTransport();
+    final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+    GoogleAccountCredential credential;
+    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
+    com.google.api.services.calendar.Calendar mService;
+    private static final String PREF_ACCOUNT_NAME = "primary";
+
+    String date, time;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
+        credential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(), Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff())
+                .setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
+
+        mService = new com.google.api.services.calendar.Calendar.Builder(
+                transport, jsonFactory, credential)
+                .setApplicationName("Google Calendar API Android Quickstart")
+                .build();
 
         retrofit = new Retrofit.Builder().baseUrl("https://api.spoonacular.com/")
                 .addConverterFactory(JacksonConverterFactory.create())
@@ -187,6 +221,8 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DatePick
         editTextDescription = dialogView.findViewById(R.id.editTextDescription);
         editTextTime = dialogView.findViewById(R.id.editTextTime);
 
+        editTextEventTitle.setText(recipe.getTitle());
+
         Button saveButton = dialogView.findViewById(R.id.saveButton);;
         Button cancelButton = dialogView.findViewById(R.id.cancelButton);
 
@@ -212,24 +248,30 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DatePick
             timePickerDialog.show();
         });
 
+        alertDialog.setView(dialogView);
+        AlertDialog dialog = alertDialog.create();
+
         saveButton.setOnClickListener(v -> {
-            /*Event event = new Event()
+            Event event = new Event()
                     .setSummary(editTextEventTitle.getText().toString())
                     .setDescription(editTextDescription.getText().toString());
 
-            DateTime startDateTime = new DateTime("2015-05-28T09:00:00-07:00");
+            DateTime dateTime = new DateTime(date+"T"+time);
             EventDateTime start = new EventDateTime()
-                    .setDateTime(startDateTime)
+                    .setDateTime(dateTime)
                     .setTimeZone("GMT+1:00");
             event.setStart(start);
 
             String calendarId = "primary";
-            //event = service.events().insert(calendarId, event).execute();
-            System.out.printf("Event created: %s\n", event.getHtmlLink()); */
-        });
+            try {
+                event = mService.events().insert(calendarId, event).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //System.out.printf("Event created: %s\n", event.getHtmlLink());
 
-        alertDialog.setView(dialogView);
-        AlertDialog dialog = alertDialog.create();
+            dialog.dismiss();
+        });
 
         cancelButton.setOnClickListener(v -> {
             dialog.dismiss();
@@ -246,13 +288,13 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DatePick
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        String date = dayOfMonth+"/"+month+"/"+year;
+        date = dayOfMonth+"-"+month+"-"+year;
         editTextDate.setText(date);
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        String time = hourOfDay+":"+minute;
+        time = hourOfDay+":"+minute;
         editTextTime.setText(time);
     }
 }
