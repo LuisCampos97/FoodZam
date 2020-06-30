@@ -14,17 +14,18 @@
         android:layout_alignParentEnd="true"
         android:fontFamily="sans-serif-condensed"
         android:text="Choose one of the following ingredients:"
-        android:textColor="@color/text_color"
+        android:textColor="@color/colorSecundary"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="16dp"/>
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="376dp"
-        android:layout_height="511dp"
+        android:layout_height="512dp"
         app:layout_constraintBottom_toTopOf="@+id/btnCancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

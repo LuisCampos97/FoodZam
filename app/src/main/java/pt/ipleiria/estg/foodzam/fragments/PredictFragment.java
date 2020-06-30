@@ -37,6 +37,7 @@ import clarifai2.dto.model.Model;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 import pt.ipleiria.estg.foodzam.R;
+import pt.ipleiria.estg.foodzam.helpers.PredictIngredientsAdapter;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -47,7 +48,6 @@ public class PredictFragment extends Fragment implements View.OnClickListener {
     private Button chooseButton, btnOpenDialog;
 
     ArrayList<String> ingredients = null;
-    ArrayAdapter<String> adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -133,7 +133,7 @@ public class PredictFragment extends Fragment implements View.OnClickListener {
         ListView listView = dialogView.findViewById(R.id.listView);
         Button btnCancel = dialogView.findViewById(R.id.btnCancel);
 
-        adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, ingredients);
+        PredictIngredientsAdapter adapter = new PredictIngredientsAdapter(requireActivity(), R.layout.row_predict_ingredient_list, ingredients);
 
         listView.setAdapter(adapter);
 
